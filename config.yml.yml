@@ -1,0 +1,4 @@
+ci_access:
+  projects:
+    - id: devops5764541/k8s_data
+# This file create in k8s agent it path is .gitlab/agents/agentname/config.yml
