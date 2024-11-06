@@ -1,0 +1,28 @@
+variables:
+  KUBE_CONTEXT: "devops5764541/k8s_connection:k8s-connection"
+stages:
+  -  build
+  -  deploy
+  
+build_image:
+  image: docker
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker login -u Shan20000 -p Shan@3256 registry.gitlab.com
+    - docker build -t $CI_REGISTRY/devops5764541/k8s_data/shan:v .
+    - docker push $CI_REGISTRY/devops5764541/k8s_data/shan:v
+    - echo "image build"
+
+deploy_project:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context $KUBE_CONTEXT
+    - kubectl get pods
+    - kubectl get nodes -o wide
+    - kubectl apply -f $CI_PROJECT_DIR/k8s_files/.
+    - kubectl get svc
