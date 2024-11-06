@@ -1,0 +1,33 @@
+kubectl create secret docker-registry app-secret --docker-server=registry.gitlab.com --docker-username='Shan20
+00' --docker-password='Shan@3256' --dry-run=client -o yaml > secret.yaml
+
+
+The error you're encountering (401 Unauthorized) while trying to pull the image from the GitLab container registry indicates that the credentials stored in the secret app-secret are not valid for accessing the image.
+
+Let's break down the issue and provide a solution:
+
+Problem Analysis:
+The secret app-secret is of type kubernetes.io/dockerconfigjson, and it contains a base64-encoded .dockerconfigjson file.
+The error (failed to authorize) means that the credentials in the secret are incorrect, expired, or lack the necessary permissions to pull the image.
+Solutions:
+1. Recreate the Secret with Correct Credentials
+To ensure the credentials in the secret are correct, recreate it using the appropriate username and a valid Personal Access Token (PAT) from GitLab. Follow these steps:
+
+a. Create a Personal Access Token (PAT) in GitLab:
+
+Go to your GitLab account's Access Tokens page.
+Generate a token with the read_registry scope.
+
+glpat-sW1LexnhXGJo39FQF74X shan-tocken
+
+
+kubectl create secret docker-registry app-secret --docker-server=registry.gitlab.com --docker-username='Shan20000' --docker-password='password' --dry-run=client -o yaml > secret.yaml
+
+kubectl create secret docker-registry app-secret --docker-server=https://registry.gitlab.com --docker-username=Shan20000 --docker-password=t<token code paste here> --docker-email=shantanuvanarase@outlook.com --dry-run=client -o yaml > shan.yaml
+
+
+
+ci_access:
+  projects:
+    - id: devops5764541/k8s_data
+# This file create in k8s agent it path is .gitlab/agents/agentname/config.yml
